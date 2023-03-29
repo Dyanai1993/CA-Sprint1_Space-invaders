@@ -16,20 +16,43 @@ function createHero(board) {
 
 
 function onKeyDown(ev) {
-    if (!gGame.isOn) return
+    if (!gGame.isOn) return;
     switch (ev.key) {
-        case 'ArrowLeft':
-            if (gHero.pos.j > 0) {
-                moveHero('left')
-            }
-            break
-        case 'ArrowRight':
-            if (gHero.pos.j < BOARD_SIZE - 1) {
-                moveHero('right')
-            }
-            break
+      case 'ArrowLeft':
+        if (gHero.pos.j > 0) {
+          moveHero('left');
+        }
+        break;
+      case 'ArrowRight':
+        if (gHero.pos.j < BOARD_SIZE - 1) {
+          moveHero('right');
+        }
+        break;
+      case 'x':
+        if (gHero.superOn || gHero.superAttackCount === 0) return;
+        gHero.superOn = true;
+        gHero.superAttackCount--;
+        updateFastLasers();
+        gHero.laserSpeed = 40;
+        if (gHero.isLaser) {
+          clearInterval(gHero.laserInterval);
+          setShootInterval(gHero.laserPos);
+        }
+        break;
+      case 'n':
+        var aliensToKill = getLaserAlienNegsPos(gHero.laserPos);
+        killLaserAlienNegs(aliensToKill);
+        console.log(aliensToKill);
+  
+        break;
+      case ' ':
+        if (!gHero.isShoot) {
+          gHero.isShoot = true;
+          handleShoot();
+        }
+        break;
     }
-}
+  }
 
 // Move the hero right (1) or left (-1)
 function moveHero(dir) {
@@ -64,3 +87,41 @@ function blinkLaser(pos) {
         if (currCell.type === LASER) updateCell(pos)
     }, gHero.laserSpeed)
 }
+
+function checkHit(pos) {
+    var currCell = gBoard[pos.i][pos.j];
+    if (currCell.type === ALIEN) {
+      killAlien(pos);
+      removeLaser();
+    } else if (currCell.type === CANDY) {
+      removeLaser();
+      collectCandy(pos);
+    } else if (currCell.type === ROCK) {
+      removeRock(pos);
+      removeLaser();
+    } else if (currCell.type === BUNKER) {
+      removeBunker(pos);
+      removeLaser();
+    } else {
+      blinkLaser(pos);
+    }
+  }
+
+  function setShootInterval(pos) {
+    gHero.laserInterval = setInterval(() => {
+      pos = { i: pos.i - 1, j: pos.j };
+      gHero.laserPos = pos;
+      if (pos.i < 0) {
+        removeLaser();
+      } else {
+        checkHit(pos);
+      }
+    }, gHero.laserSpeed);
+  }
+
+  function removeLaser() {
+    gHero.isShoot = false;
+    if (gHero.superOn) removeSuper();
+    clearInterval(gHero.laserInterval);
+    gHero.isLaser = false;
+  }
