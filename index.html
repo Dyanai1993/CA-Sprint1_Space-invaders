@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<title>Space Invaders by Dor Yanai</title>
-		<link rel="stylesheet" href="css/style.css" />
-	</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Space Invaders by Yehonatan Yosefi</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
 
-	<body onload="init()" onkeydown="onKeyDown(event)">
-		
-		<div class="modal">
-			<h2 class="user-msg">'Arrow keys' - move</h2>
-			<button class="restart-btn button" onclick="onStart()">Start</button>
-		</div>
-		<div class="container">
-		</div>
-		<div class="game-elemets"><span id="lives"></span><span id="fast-lasers"></span></div>
-		<script src="js/util.js"></script>
-		<script src="js/main.js"></script>
-		<script src="js/alien.js"></script>
-		<script src="js/hero.js"></script>
-	</body>
-	<footer>Made by Dor Yanai</footer>
+  <body onload="init()" onkeydown="onKeyDown(event)">
+    <div class="score">
+      Highest Score: <span id="high-score">0</span> current score:
+      <span id="current-score">0</span>
+    </div>
+    <div class="modal">
+      <h2 class="user-msg">
+        'Arrow keys' - move<br />'Space' - shoot<br />'x' - Fast Laser <br />
+		'n' - multiKill
+      </h2>
+      <button class="restart-btn button" onclick="onStart()">Start</button>
+    </div>
+    <div class="container"></div>
+    <div class="game-elemets">
+      <span id="lives"></span><span id="fast-lasers"></span>
+    </div>
+    <script src="js/util.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/alien.js"></script>
+    <script src="js/hero.js"></script>
+  </body>
+  <footer>Made by Dor Yanai</footer>
 </html>
